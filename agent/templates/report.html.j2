@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run report · {{ state.run_id }}</title>
+<style>
+  :root { --text:#1f2933; --muted:#616e7c; --border:#e1e5ea; --bg:#f6f7f9; --ok:#1e6b34; --okbg:#e6f4ea;
+          --bad:#a12622; --badbg:#fdecea; --warn:#8a5a00; --warnbg:#fff4e0; --info:#1e3a8a; --infobg:#e8efff; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+         color:var(--text); background:var(--bg); }
+  main { max-width: 1080px; margin: 0 auto; padding: 28px 20px 60px; }
+  header { background:#fff; border:1px solid var(--border); border-radius:10px; padding:22px 24px; margin-bottom:20px; }
+  h1 { font-size:20px; margin:0 0 6px; } h2 { font-size:16px; margin:0 0 12px; }
+  section { background:#fff; border:1px solid var(--border); border-radius:10px; padding:20px 24px; margin-bottom:18px; }
+  .muted { color:var(--muted); } .small { font-size:12px; }
+  .badge { display:inline-block; padding:2px 10px; border-radius:12px; font-weight:600; font-size:12px; }
+  .completed, .pass, .approved { background:var(--okbg); color:var(--ok); }
+  .failed, .fail, .denied { background:var(--badbg); color:var(--bad); }
+  .partial, .incomplete, .unverifiable, .awaiting_human { background:var(--warnbg); color:var(--warn); }
+  .running, .verifying { background:var(--infobg); color:var(--info); }
+  table { width:100%; border-collapse:collapse; } th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+  th { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.03em; }
+  .kv { display:grid; grid-template-columns: 180px 1fr; gap:6px 16px; }
+  .kv dt { color:var(--muted); } .kv dd { margin:0; }
+  .stats { display:flex; flex-wrap:wrap; gap:12px; }
+  .stat { border:1px solid var(--border); border-radius:8px; padding:10px 14px; min-width:120px; }
+  .stat b { display:block; font-size:20px; }
+  .shots { display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:10px; }
+  .shots a { display:block; border:1px solid var(--border); border-radius:6px; overflow:hidden; background:#fafafa; }
+  .shots img { width:100%; display:block; } .shots span { display:block; padding:4px 6px; font-size:11px; color:var(--muted); word-break:break-all; }
+  img.thumb { width:140px; border:1px solid var(--border); border-radius:4px; margin:4px 4px 0 0; }
+  ul.plain { margin:0; padding-left:18px; }
+  details summary { cursor:pointer; font-weight:600; }
+  .timeline td { font-size:12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  code { background:#f1f3f5; padding:1px 4px; border-radius:3px; }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <div class="muted small">Operator run {{ state.run_id }}{% if models %} · model {{ models|join(", ") }}{% endif %}</div>
+  <h1>{{ state.request }}</h1>
+  <span class="badge {{ state.status }}">{{ state.status|replace("_", " ")|upper }}</span>
+  {% if verification %}<span class="badge {{ verification.overall }}">VERIFICATION: {{ verification.overall|upper }}</span>{% endif %}
+  <span class="muted small">&nbsp; started {{ state.started_at }} · {{ duration }}</span>
+  {% if outcome_counts %}<p>{% for status, n in outcome_counts.items() %}<b>{{ n }}</b> {{ status }}{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+</header>
+
+{% if contract %}
+<section>
+  <h2>What I understood</h2>
+  <dl class="kv">
+    <dt>Objective</dt><dd>{{ contract.objective }}</dd>
+    <dt>Interpretation</dt><dd>{{ contract.interpretation }}</dd>
+    <dt>Procedure followed</dt><dd>{{ contract.sop_used or "none (plan approved by a human)" }}</dd>
+    {% if contract.assumptions %}<dt>Assumptions</dt><dd><ul class="plain">{% for a in contract.assumptions %}<li>{{ a }}</li>{% endfor %}</ul></dd>{% endif %}
+    {% if contract.expected_approvals %}<dt>Approvals expected</dt><dd>{{ contract.expected_approvals|join(", ") }}</dd>{% endif %}
+  </dl>
+</section>
+{% endif %}
+
+<section>
+  <h2>Results</h2>
+  {% if state.outcomes %}
+  <table>
+    <tr><th>Item</th><th>Outcome</th><th>Details</th><th>Evidence</th></tr>
+    {% for o in state.outcomes %}
+    <tr>
+      <td>{{ o.item }}</td><td><b>{{ o.status }}</b></td><td>{{ o.details }}</td>
+      <td class="small">{% for e in o.evidence %}{% if is_image(e) %}<a href="{{ e }}"><img class="thumb" src="{{ e }}" alt="{{ e }}"></a>{% else %}<div>{{ e }}</div>{% endif %}{% endfor %}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="muted">No outcomes were recorded.</p>{% endif %}
+</section>
+
+<section>
+  <h2>Independent verification</h2>
+  {% if verification %}
+  <p>{{ verification.summary }}{% if repair_rounds %} <span class="badge partial">{{ repair_rounds }} repair round{{ "s" if repair_rounds > 1 }}</span>{% endif %}</p>
+  <table>
+    <tr><th>Criterion</th><th>Result</th><th>What was checked</th><th>Evidence</th></tr>
+    {% for c in verification.criteria %}
+    {% set spec = (contract.acceptance_criteria|selectattr("id", "equalto", c.criterion_id)|first) if contract else none %}
+    <tr>
+      <td><b>{{ c.criterion_id }}</b>{% if spec %}<div class="small muted">{{ spec.description }}</div>{% endif %}</td>
+      <td><span class="badge {{ c.status }}">{{ c.status|upper }}</span></td>
+      <td>{{ c.explanation }}</td>
+      <td class="small">{% for e in c.evidence %}{% if is_image(e) %}<a href="{{ e }}"><img class="thumb" src="{{ e }}" alt="{{ e }}"></a>{% else %}<div>{{ e }}</div>{% endif %}{% endfor %}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% if verification.claims %}
+  <h2 style="margin-top:18px">Operator's claims, checked</h2>
+  <table>
+    <tr><th>Item</th><th>Checked</th><th>Explanation</th></tr>
+    {% for c in verification.claims %}
+    <tr><td>{{ c.item }}</td><td><span class="badge {{ {'confirmed': 'pass', 'refuted': 'fail'}.get(c.status, 'unverifiable') }}">{{ c.status|upper }}</span></td><td>{{ c.explanation }}</td></tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+  {% else %}<p class="muted">The work has not been verified (the run did not reach verification).</p>{% endif %}
+</section>
+
+<section>
+  <h2>Human involvement</h2>
+  {% if approvals or questions %}
+  <table>
+    <tr><th>When</th><th>What</th><th>Decision / answer</th></tr>
+    {% for e in approvals %}
+    <tr><td class="small">{{ e.ts }}</td>
+        <td>Approval{% if e.data.rule_id %} under <b>{{ e.data.rule_id }}</b>{% endif %}: {{ e.data.summary }}
+          {% if e.data.params %}<div class="small muted">{% for k, v in e.data.params.items() %}{{ k }}={{ v }}{% if not loop.last %} · {% endif %}{% endfor %}</div>{% endif %}</td>
+        <td><span class="badge {{ 'approved' if e.data.approved else 'denied' }}">{{ "APPROVED" if e.data.approved else "DENIED" }}</span> {{ e.data.note }}</td></tr>
+    {% endfor %}
+    {% for e in questions %}
+    <tr><td class="small">{{ e.ts }}</td><td>Question: {{ e.data.question }}</td><td>{{ e.data.answer }}</td></tr>
+    {% endfor %}
+  </table>
+  {% else %}<p class="muted">No human input was needed.</p>{% endif %}
+</section>
+
+<section>
+  <h2>Reliability</h2>
+  {% if recoveries %}
+  <p>{{ recoveries.values()|sum }} recoveries: {% for k, n in recoveries.most_common() %}<b>{{ n }}</b> {{ k|replace("_", " ") }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+  {% else %}<p class="muted">No failures needed recovering from.</p>{% endif %}
+  {% if policy_blocks %}
+  <p>Blocked by policy:</p>
+  <ul class="plain">{% for b in policy_blocks %}<li><b>{{ b.decision|replace("_", " ") }}</b>: {{ b.action }}{% if b.rule %} ({{ b.rule }}){% endif %}{% if b.previous %}, already done: {{ b.previous }}{% endif %}{% if b.detail %}: {{ b.detail }}{% endif %}</li>{% endfor %}</ul>
+  {% endif %}
+</section>
+
+{% if state.plan %}
+<section>
+  <h2>Final plan</h2>
+  <ul class="plain">{% for s in state.plan %}<li><span class="badge {{ 'completed' if s.status == 'done' else ('failed' if s.status == 'failed' else 'partial') }}">{{ s.status }}</span> {{ s.title }}{% if s.note %} <span class="muted small">{{ s.note }}</span>{% endif %}</li>{% endfor %}</ul>
+</section>
+{% endif %}
+
+<section>
+  <h2>Stats</h2>
+  <div class="stats">
+    <div class="stat"><b>{{ state.step }}</b>operator turns</div>
+    <div class="stat"><b>{{ state.llm_calls }}</b>model calls</div>
+    <div class="stat"><b>{{ "{:,}".format(state.tokens_in) }}</b>input tokens</div>
+    <div class="stat"><b>{{ "{:,}".format(state.tokens_out) }}</b>output tokens</div>
+    <div class="stat"><b>{{ "$%.3f"|format(state.cost_usd) if state.cost_usd else "n/a" }}</b>estimated cost</div>
+  </div>
+</section>
+
+{% if screenshots %}
+<section>
+  <details><summary>All screenshots ({{ screenshots|length }})</summary>
+    <div class="shots" style="margin-top:12px">{% for s in screenshots %}<a href="{{ s }}"><img src="{{ s }}" alt="{{ s }}" loading="lazy"><span>{{ s.split("/")[-1] }}</span></a>{% endfor %}</div>
+  </details>
+</section>
+{% endif %}
+
+<section>
+  <details><summary>Full event timeline ({{ timeline|length }} events)</summary>
+    <table class="timeline" style="margin-top:12px">
+      {% for e in timeline %}<tr><td>{{ e.ts[11:] }}</td><td>{{ e.type }}</td><td>{{ e.data|tojson|truncate(400) }}</td></tr>{% endfor %}
+    </table>
+  </details>
+</section>
+
+</main>
+</body>
+</html>
