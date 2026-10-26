@@ -1,0 +1,73 @@
+# System directory: which systems Acme has, how to reach them, and which actions in
+# them are meaningful writes. The operator reads this to know where work happens; the
+# policy gate uses the `actions` signatures to recognize a write before it happens.
+
+systems:
+  acme_erp:
+    kind: web
+    description: >
+      Acme's internal ERP. Holds purchase orders, vendor bills, AP exceptions,
+      vendors (with GL codes), employees, equipment/assets and system access requests.
+    base_url_env: ACME_ERP_URL
+    credentials_env: { username: ACME_ERP_USER, password: ACME_ERP_PASSWORD }
+    areas:
+      - "Purchase Orders: searchable list of POs with vendor, total and status"
+      - "Bills: entered vendor bills, searchable by invoice number; 'New Bill' form"
+      - "Exceptions: AP exception queue for invoices that cannot be billed; 'New Exception' form"
+      - "Vendors: vendor list with category and GL code"
+      - "Employees: staff directory; 'New Employee' form"
+      - "Equipment: asset list; each asset's page has an assignment form"
+      - "Access Requests: system access requests; 'New Access Request' form"
+
+    # Action signatures. Matched on URL + "this click submits a form", never on button
+    # text, so they still match when the UI relabels its buttons. `fields` maps a
+    # parameter name to the form label the gate reads the value from; all of them must
+    # be filled in before the gate will consider the submission.
+    actions:
+      - type: create_bill
+        url_pattern: "^/bills/new$"
+        trigger: form_submit
+        risk: write
+        fields: { vendor: "Vendor", po_number: "PO Number", invoice_number: "Invoice Number", amount: "Amount" }
+        idempotency_key: [vendor, invoice_number]
+
+      - type: log_exception
+        url_pattern: "^/exceptions/new$"
+        trigger: form_submit
+        risk: write
+        fields: { vendor: "Vendor", invoice_number: "Invoice Number" }
+        idempotency_key: [vendor, invoice_number]
+
+      - type: create_employee
+        url_pattern: "^/employees/new$"
+        trigger: form_submit
+        risk: write
+        fields: { full_name: "Full Name", email: "Email" }
+        idempotency_key: [email]
+
+      - type: assign_equipment
+        # asset_tag comes from the URL itself (named group), not from the form.
+        url_pattern: "^/equipment/(?P<asset_tag>[^/]+)$"
+        trigger: form_submit
+        risk: write
+        fields: { employee: "Employee", asset_value: "Asset Value" }
+        idempotency_key: [employee, asset_tag]
+
+      - type: request_access
+        url_pattern: "^/access-requests/new$"
+        trigger: form_submit
+        risk: write
+        fields: { employee: "Employee", system: "System", level: "Access Level" }
+        idempotency_key: [employee, system]
+
+  file_inbox:
+    kind: folder
+    description: "Shared folder where vendors' invoice PDFs arrive."
+    path: company/inbox
+    access: read
+
+  file_outbox:
+    kind: folder
+    description: "Folder where the operator writes exported files and reports."
+    path: company/outbox
+    access: write

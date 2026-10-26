@@ -1,0 +1,50 @@
+# Company policies, enforced by the operator's policy gate in plain code.
+# The model never decides whether an action needs approval: these rules do.
+
+risk_defaults:
+  read: allow
+  write: allow
+  irreversible: require_approval 
+
+rules:
+  - id: FIN-3
+    description: "Bills above $10,000 require manager approval."
+    when: { action: create_bill, field: amount, op: ">", value: 10000 }
+    effect: require_approval
+
+  - id: IT-7
+    description: "Assigning equipment worth more than $2,000 requires IT manager approval."
+    when: { action: assign_equipment, field: asset_value, op: ">", value: 2000 }
+    effect: require_approval
+
+  - id: SEC-1
+    description: "Admin-level access requests require security approval."
+    when: { action: request_access, field: level, op: "==", value: admin }
+    effect: require_approval
+
+  - id: SEC-2
+    description: "Finance Portal access is never granted by the operator."
+    when: { action: request_access, field: system, op: "==", value: "Finance Portal" }
+    effect: deny
+
+# Pre-submit checks: controls on writes that can't be undone (the ERP has no delete). Before a
+# matching submission the gate looks the fact up in the ERP itself and blocks it if it isn't true.
+checks:
+  - id: AP-1
+    description: "An invoice is billed only once: no bill may already exist for the same vendor and invoice number."
+    when: { action: create_bill }
+    lookup: "/bills?q={invoice_number}"
+    must_not_exist: { row_contains: [vendor, invoice_number] }
+
+  - id: AP-2
+    description: "A bill must be raised against an Open purchase order from the same vendor, for an amount within $5.00 of the PO total."
+    when: { action: create_bill }
+    lookup: "/purchase-orders/{po_number}"
+    must_match:
+      - { shown_as: "Status", equals: "Open" }
+      - { shown_as: "Vendor", field: vendor }
+      - { shown_as: "Total", field: amount, tolerance: 5.00 }
+
+unknown_task:
+  # No matching SOP: show the proposed plan to a human before executing anything.
+  require_plan_approval: true
