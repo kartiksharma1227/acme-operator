@@ -1,0 +1,59 @@
+# Each scenario: reset the sandbox, run the real agent, answer its pauses from `human`, then grade
+# the end state with `check` (a function in ground_truth.py) and the gate's approval log.
+#   chaos:            sandbox chaos modes (rename, expiry, flaky, slow), seeded for reproducibility
+#   human.approvals:  policy id -> approve | deny   (anything unscripted is denied and flagged)
+#   human.answers:    answers to questions, in order
+#   expect_approvals: policy ids that must be decided exactly once
+#   question_first:   the first pause must be a question, before any record was written
+
+- name: invoices_clean
+  request: "Process the vendor invoices in the inbox."
+  chaos: ""
+  human: { approvals: { FIN-3: approve } }
+  check: invoices_expected
+  expect_approvals: [FIN-3]
+
+- name: invoices_chaos
+  request: "Process the vendor invoices in the inbox."
+  chaos: "rename,expiry,flaky,slow"
+  human: { approvals: { FIN-3: approve } }
+  check: invoices_expected
+  expect_approvals: [FIN-3]
+
+- name: invoices_deny
+  request: "Process the vendor invoices in the inbox."
+  chaos: ""
+  human: { approvals: { FIN-3: deny } }
+  check: invoices_expected_with_denial
+  expect_approvals: [FIN-3]
+
+- name: onboarding_clean
+  request: "Onboard Priya Sharma — she's joining Sales as an Account Executive this coming Monday, reporting to Daniel Ruiz."
+  chaos: ""
+  human: { approvals: { IT-7: approve } }
+  check: onboarding_expected
+  expect_approvals: [IT-7]
+
+- name: onboarding_chaos
+  request: "Onboard Priya Sharma — she's joining Sales as an Account Executive this coming Monday, reporting to Daniel Ruiz."
+  chaos: "rename,expiry,flaky,slow"
+  human: { approvals: { IT-7: approve } }
+  check: onboarding_expected
+  expect_approvals: [IT-7]
+
+- name: onboarding_ambiguous
+  request: "Onboard Priya Sharma"
+  chaos: ""
+  human:
+    approvals: { IT-7: approve }
+    answers: ["Sales, Account Executive, starting this coming Monday, reporting to Daniel Ruiz"]
+  check: onboarding_expected
+  expect_approvals: [IT-7]
+  question_first: true
+
+- name: po_export_no_sop
+  request: "Export all open purchase orders above $5,000 to a CSV in the outbox."
+  chaos: ""
+  human: { approvals: { unknown_task: approve } }
+  check: csv_expected
+  expect_approvals: [unknown_task]

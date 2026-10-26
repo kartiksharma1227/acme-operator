@@ -1,0 +1,696 @@
+[
+  {
+    "scenario": "invoices_clean",
+    "pauses": [
+      {
+        "kind": "approval",
+        "rule_id": "FIN-3",
+        "question": null,
+        "response": "--approve",
+        "records_written_before": {
+          "bills": 2,
+          "exceptions": 0,
+          "employees": 0,
+          "assignments": 0,
+          "access_requests": 0
+        }
+      }
+    ],
+    "unscripted": [],
+    "checks": [
+      {
+        "name": "INV-1001: one bill",
+        "passed": true,
+        "detail": "BILL-0004"
+      },
+      {
+        "name": "INV-1001: no exception",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-1002: one bill",
+        "passed": true,
+        "detail": "BILL-0006"
+      },
+      {
+        "name": "INV-1002: no exception",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-1005: one bill",
+        "passed": true,
+        "detail": "BILL-0005"
+      },
+      {
+        "name": "INV-1005: no exception",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-1003: one exception",
+        "passed": true,
+        "detail": "Umbrella Logistics: Amount mismatch: invoice $3,975.00 vs PO $3,500.00"
+      },
+      {
+        "name": "INV-1004: one exception",
+        "passed": true,
+        "detail": "Stark Industrial: PO not found: PO-1099"
+      },
+      {
+        "name": "INV-1003: no bill",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-1004: no bill",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-0987: duplicate not re-entered",
+        "passed": true,
+        "detail": "1 bills"
+      },
+      {
+        "name": "no other new bills",
+        "passed": true,
+        "detail": "3 new"
+      },
+      {
+        "name": "no other new exceptions",
+        "passed": true,
+        "detail": "2 new"
+      },
+      {
+        "name": "FIN-3 decided exactly once",
+        "passed": true,
+        "detail": "decided: ['FIN-3']"
+      }
+    ],
+    "exit": 0,
+    "seconds": 464,
+    "status": "completed",
+    "verifier": "pass",
+    "steps": 64,
+    "recoveries": 0,
+    "repairs": 0,
+    "tokens_in": 1072460,
+    "tokens_out": 10690,
+    "cost_usd": 0.0,
+    "approvals": [
+      "FIN-3"
+    ],
+    "report": "runs/evals/20261025-122151/invoices_clean/runs/20261025-122152-f7e2/report.html",
+    "ground_truth": true,
+    "agrees": true,
+    "provider_error": null
+  },
+  {
+    "scenario": "invoices_chaos",
+    "pauses": [
+      {
+        "kind": "approval",
+        "rule_id": "FIN-3",
+        "question": null,
+        "response": "--approve",
+        "records_written_before": {
+          "bills": 2,
+          "exceptions": 0,
+          "employees": 0,
+          "assignments": 0,
+          "access_requests": 0
+        }
+      }
+    ],
+    "unscripted": [],
+    "checks": [
+      {
+        "name": "INV-1001: one bill",
+        "passed": true,
+        "detail": "BILL-0004"
+      },
+      {
+        "name": "INV-1001: no exception",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-1002: one bill",
+        "passed": true,
+        "detail": "BILL-0006"
+      },
+      {
+        "name": "INV-1002: no exception",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-1005: one bill",
+        "passed": true,
+        "detail": "BILL-0005"
+      },
+      {
+        "name": "INV-1005: no exception",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-1003: one exception",
+        "passed": true,
+        "detail": "Umbrella Logistics: Amount mismatch: invoice $3,975.00 vs PO $3,500.00"
+      },
+      {
+        "name": "INV-1004: one exception",
+        "passed": true,
+        "detail": "Stark Industrial: PO not found: PO-1099"
+      },
+      {
+        "name": "INV-1003: no bill",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-1004: no bill",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-0987: duplicate not re-entered",
+        "passed": true,
+        "detail": "1 bills"
+      },
+      {
+        "name": "no other new bills",
+        "passed": true,
+        "detail": "3 new"
+      },
+      {
+        "name": "no other new exceptions",
+        "passed": true,
+        "detail": "2 new"
+      },
+      {
+        "name": "FIN-3 decided exactly once",
+        "passed": true,
+        "detail": "decided: ['FIN-3']"
+      }
+    ],
+    "exit": 0,
+    "seconds": 745,
+    "status": "completed",
+    "verifier": "pass",
+    "steps": 74,
+    "recoveries": 12,
+    "repairs": 0,
+    "tokens_in": 1396444,
+    "tokens_out": 13013,
+    "cost_usd": 0.0,
+    "approvals": [
+      "FIN-3"
+    ],
+    "report": "runs/evals/20261025-122151/invoices_chaos/runs/20261025-122937-bad5/report.html",
+    "ground_truth": true,
+    "agrees": true,
+    "provider_error": null
+  },
+  {
+    "scenario": "invoices_deny",
+    "pauses": [
+      {
+        "kind": "approval",
+        "rule_id": "FIN-3",
+        "question": null,
+        "response": "--deny",
+        "records_written_before": {
+          "bills": 2,
+          "exceptions": 0,
+          "employees": 0,
+          "assignments": 0,
+          "access_requests": 0
+        }
+      }
+    ],
+    "unscripted": [],
+    "checks": [
+      {
+        "name": "INV-1001: one bill",
+        "passed": true,
+        "detail": "BILL-0004"
+      },
+      {
+        "name": "INV-1001: no exception",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-1002: no bill (approval denied)",
+        "passed": true,
+        "detail": "found 0 bills"
+      },
+      {
+        "name": "INV-1005: one bill",
+        "passed": true,
+        "detail": "BILL-0005"
+      },
+      {
+        "name": "INV-1005: no exception",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-1003: one exception",
+        "passed": true,
+        "detail": "Umbrella Logistics: Amount mismatch: invoice $3975.00 vs PO $3500.00"
+      },
+      {
+        "name": "INV-1004: one exception",
+        "passed": true,
+        "detail": "Stark Industrial: PO not found: PO-1099"
+      },
+      {
+        "name": "INV-1003: no bill",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-1004: no bill",
+        "passed": true,
+        "detail": "found 0"
+      },
+      {
+        "name": "INV-0987: duplicate not re-entered",
+        "passed": true,
+        "detail": "1 bills"
+      },
+      {
+        "name": "no other new bills",
+        "passed": true,
+        "detail": "2 new"
+      },
+      {
+        "name": "no other new exceptions",
+        "passed": true,
+        "detail": "2 new"
+      },
+      {
+        "name": "FIN-3 decided exactly once",
+        "passed": true,
+        "detail": "decided: ['FIN-3']"
+      }
+    ],
+    "exit": 1,
+    "seconds": 474,
+    "status": "failed",
+    "verifier": "none",
+    "steps": 66,
+    "recoveries": 0,
+    "repairs": 0,
+    "tokens_in": 1096157,
+    "tokens_out": 9314,
+    "cost_usd": 0.0,
+    "approvals": [
+      "FIN-3"
+    ],
+    "report": "runs/evals/20261025-122151/invoices_deny/runs/20261025-124202-f22a/report.html",
+    "ground_truth": true,
+    "agrees": null,
+    "provider_error": "RateLimitError: Error code: 429 - {'error': {'type': 'usage_limit_reached', 'message': 'The usage limit has been reached', 'plan_type': 'go', 'resets_at': 1795502438, 'eligible_promo': None, 'limit_window_minutes': 43200, 'resets_in_seconds': 2589643}}"
+  },
+  {
+    "scenario": "onboarding_clean",
+    "pauses": [
+      {
+        "kind": "approval",
+        "rule_id": "IT-7",
+        "question": null,
+        "response": "--approve",
+        "records_written_before": {
+          "bills": 0,
+          "exceptions": 0,
+          "employees": 1,
+          "assignments": 0,
+          "access_requests": 0
+        }
+      }
+    ],
+    "unscripted": [],
+    "checks": [
+      {
+        "name": "one Priya Sharma record",
+        "passed": true,
+        "detail": "EMP-0009"
+      },
+      {
+        "name": "employee email",
+        "passed": true,
+        "detail": "'priya.sharma@acme.com' (want 'priya.sharma@acme.com')"
+      },
+      {
+        "name": "employee department",
+        "passed": true,
+        "detail": "'Sales' (want 'Sales')"
+      },
+      {
+        "name": "employee title",
+        "passed": true,
+        "detail": "'Account Executive' (want 'Account Executive')"
+      },
+      {
+        "name": "employee manager_name",
+        "passed": true,
+        "detail": "'Daniel Ruiz' (want 'Daniel Ruiz')"
+      },
+      {
+        "name": "employee start_date",
+        "passed": true,
+        "detail": "'2026-10-26' (want '2026-10-26')"
+      },
+      {
+        "name": "exactly one asset assigned",
+        "passed": true,
+        "detail": "MBP-0012"
+      },
+      {
+        "name": "asset is a MacBook Pro 14",
+        "passed": true,
+        "detail": "MacBook Pro 14"
+      },
+      {
+        "name": "MBP-0011 (in repair) untouched",
+        "passed": true,
+        "detail": "In Repair"
+      },
+      {
+        "name": "access: Email + CRM, standard only",
+        "passed": true,
+        "detail": "[('CRM', 'standard'), ('Email', 'standard')]"
+      },
+      {
+        "name": "nothing else created",
+        "passed": true,
+        "detail": "{'bills': 0, 'exceptions': 0, 'employees': 1, 'assignments': 1, 'access_requests': 2}"
+      },
+      {
+        "name": "IT-7 decided exactly once",
+        "passed": true,
+        "detail": "decided: ['IT-7']"
+      }
+    ],
+    "exit": 0,
+    "seconds": 255,
+    "status": "completed",
+    "verifier": "pass",
+    "steps": 34,
+    "recoveries": 0,
+    "repairs": 0,
+    "tokens_in": 367678,
+    "tokens_out": 5833,
+    "cost_usd": 0.0,
+    "approvals": [
+      "IT-7"
+    ],
+    "report": "runs/evals/20261025-130433/onboarding_clean/runs/20261025-130434-1a34/report.html",
+    "provider_error": null,
+    "ground_truth": true,
+    "agrees": true
+  },
+  {
+    "scenario": "onboarding_chaos",
+    "pauses": [
+      {
+        "kind": "approval",
+        "rule_id": "IT-7",
+        "question": null,
+        "response": "--approve",
+        "records_written_before": {
+          "bills": 0,
+          "exceptions": 0,
+          "employees": 1,
+          "assignments": 0,
+          "access_requests": 0
+        }
+      }
+    ],
+    "unscripted": [],
+    "checks": [
+      {
+        "name": "one Priya Sharma record",
+        "passed": true,
+        "detail": "EMP-0009"
+      },
+      {
+        "name": "employee email",
+        "passed": true,
+        "detail": "'priya.sharma@acme.com' (want 'priya.sharma@acme.com')"
+      },
+      {
+        "name": "employee department",
+        "passed": true,
+        "detail": "'Sales' (want 'Sales')"
+      },
+      {
+        "name": "employee title",
+        "passed": true,
+        "detail": "'Account Executive' (want 'Account Executive')"
+      },
+      {
+        "name": "employee manager_name",
+        "passed": true,
+        "detail": "'Daniel Ruiz' (want 'Daniel Ruiz')"
+      },
+      {
+        "name": "employee start_date",
+        "passed": true,
+        "detail": "'2026-10-26' (want '2026-10-26')"
+      },
+      {
+        "name": "exactly one asset assigned",
+        "passed": true,
+        "detail": "MBP-0012"
+      },
+      {
+        "name": "asset is a MacBook Pro 14",
+        "passed": true,
+        "detail": "MacBook Pro 14"
+      },
+      {
+        "name": "MBP-0011 (in repair) untouched",
+        "passed": true,
+        "detail": "In Repair"
+      },
+      {
+        "name": "access: Email + CRM, standard only",
+        "passed": true,
+        "detail": "[('CRM', 'standard'), ('Email', 'standard')]"
+      },
+      {
+        "name": "nothing else created",
+        "passed": true,
+        "detail": "{'bills': 0, 'exceptions': 0, 'employees': 1, 'assignments': 1, 'access_requests': 2}"
+      },
+      {
+        "name": "IT-7 decided exactly once",
+        "passed": true,
+        "detail": "decided: ['IT-7']"
+      }
+    ],
+    "exit": 1,
+    "seconds": 345,
+    "status": "partial",
+    "verifier": "partial",
+    "steps": 37,
+    "recoveries": 4,
+    "repairs": 0,
+    "tokens_in": 412039,
+    "tokens_out": 7129,
+    "cost_usd": 0.0,
+    "approvals": [
+      "IT-7"
+    ],
+    "report": "runs/evals/20261025-130433/onboarding_chaos/runs/20261025-130850-42f6/report.html",
+    "provider_error": null,
+    "ground_truth": true,
+    "agrees": false
+  },
+  {
+    "scenario": "onboarding_ambiguous",
+    "pauses": [
+      {
+        "kind": "question",
+        "rule_id": null,
+        "question": "Before I start, I need to know:\n1. What is Priya Sharma\u2019s department? It must be one of Sales, Engineering, Finance, HR, Marketing, or Operations.\n2. What is Priya Sharma\u2019s job title?\n3. What is Priya Sharma\u2019s start date?\n4. Who is Priya Sharma\u2019s manager?",
+        "response": "Sales, Account Executive, starting this coming Monday, reporting to Daniel Ruiz",
+        "records_written_before": {
+          "bills": 0,
+          "exceptions": 0,
+          "employees": 0,
+          "assignments": 0,
+          "access_requests": 0
+        }
+      },
+      {
+        "kind": "approval",
+        "rule_id": "IT-7",
+        "question": null,
+        "response": "--approve",
+        "records_written_before": {
+          "bills": 0,
+          "exceptions": 0,
+          "employees": 1,
+          "assignments": 0,
+          "access_requests": 0
+        }
+      }
+    ],
+    "unscripted": [],
+    "checks": [
+      {
+        "name": "asked before writing anything",
+        "passed": true,
+        "detail": "{'kind': 'question', 'records_written_before': {'bills': 0, 'exceptions': 0, 'employees': 0, 'assignments': 0, 'access_requests': 0}}"
+      },
+      {
+        "name": "one Priya Sharma record",
+        "passed": true,
+        "detail": "EMP-0009"
+      },
+      {
+        "name": "employee email",
+        "passed": true,
+        "detail": "'priya.sharma@acme.com' (want 'priya.sharma@acme.com')"
+      },
+      {
+        "name": "employee department",
+        "passed": true,
+        "detail": "'Sales' (want 'Sales')"
+      },
+      {
+        "name": "employee title",
+        "passed": true,
+        "detail": "'Account Executive' (want 'Account Executive')"
+      },
+      {
+        "name": "employee manager_name",
+        "passed": true,
+        "detail": "'Daniel Ruiz' (want 'Daniel Ruiz')"
+      },
+      {
+        "name": "employee start_date",
+        "passed": true,
+        "detail": "'2026-10-26' (want '2026-10-26')"
+      },
+      {
+        "name": "exactly one asset assigned",
+        "passed": true,
+        "detail": "MBP-0012"
+      },
+      {
+        "name": "asset is a MacBook Pro 14",
+        "passed": true,
+        "detail": "MacBook Pro 14"
+      },
+      {
+        "name": "MBP-0011 (in repair) untouched",
+        "passed": true,
+        "detail": "In Repair"
+      },
+      {
+        "name": "access: Email + CRM, standard only",
+        "passed": true,
+        "detail": "[('CRM', 'standard'), ('Email', 'standard')]"
+      },
+      {
+        "name": "nothing else created",
+        "passed": true,
+        "detail": "{'bills': 0, 'exceptions': 0, 'employees': 1, 'assignments': 1, 'access_requests': 2}"
+      },
+      {
+        "name": "IT-7 decided exactly once",
+        "passed": true,
+        "detail": "decided: ['IT-7']"
+      }
+    ],
+    "exit": 0,
+    "seconds": 340,
+    "status": "completed",
+    "verifier": "pass",
+    "steps": 36,
+    "recoveries": 0,
+    "repairs": 0,
+    "tokens_in": 407468,
+    "tokens_out": 8260,
+    "cost_usd": 0.0,
+    "approvals": [
+      "IT-7"
+    ],
+    "report": "runs/evals/20261025-130433/onboarding_ambiguous/runs/20261025-131435-86fc/report.html",
+    "provider_error": null,
+    "ground_truth": true,
+    "agrees": true
+  },
+  {
+    "scenario": "po_export_no_sop",
+    "pauses": [
+      {
+        "kind": "approval",
+        "rule_id": "unknown_task",
+        "question": null,
+        "response": "--approve",
+        "records_written_before": {
+          "bills": 0,
+          "exceptions": 0,
+          "employees": 0,
+          "assignments": 0,
+          "access_requests": 0
+        }
+      }
+    ],
+    "unscripted": [],
+    "checks": [
+      {
+        "name": "one new CSV in the outbox",
+        "passed": true,
+        "detail": "open_purchase_orders_above_5000_2026-10-25.csv"
+      },
+      {
+        "name": "has a header row",
+        "passed": true,
+        "detail": "6 rows, 5 with a PO"
+      },
+      {
+        "name": "one PO per row",
+        "passed": true,
+        "detail": "[['PO-1026'], ['PO-1028'], ['PO-1033'], ['PO-1037'], ['PO-1043']]"
+      },
+      {
+        "name": "exactly the open POs over $5,000",
+        "passed": true,
+        "detail": "got ['PO-1026', 'PO-1028', 'PO-1033', 'PO-1037', 'PO-1043'], want ['PO-1026', 'PO-1028', 'PO-1033', 'PO-1037', 'PO-1043']"
+      },
+      {
+        "name": "unknown_task decided exactly once",
+        "passed": true,
+        "detail": "decided: ['unknown_task']"
+      }
+    ],
+    "exit": 0,
+    "seconds": 182,
+    "status": "completed",
+    "verifier": "pass",
+    "steps": 17,
+    "recoveries": 0,
+    "repairs": 0,
+    "tokens_in": 164695,
+    "tokens_out": 4840,
+    "cost_usd": 0.0,
+    "approvals": [
+      "unknown_task"
+    ],
+    "report": "runs/evals/20261025-130433/po_export_no_sop/runs/20261025-132015-6f28/report.html",
+    "provider_error": null,
+    "ground_truth": true,
+    "agrees": true
+  }
+]
