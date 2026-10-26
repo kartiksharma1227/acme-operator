@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+<div class="tiles">
+  <a class="tile" href="/purchase-orders"><span class="num">{{ counts.open_pos }}</span><span>Open purchase orders</span></a>
+  <a class="tile" href="/bills"><span class="num">{{ counts.bills }}</span><span>Bills entered</span></a>
+  <a class="tile" href="/exceptions"><span class="num">{{ counts.exceptions }}</span><span>AP exceptions</span></a>
+  <a class="tile" href="/employees"><span class="num">{{ counts.employees }}</span><span>Employees</span></a>
+  <a class="tile" href="/equipment"><span class="num">{{ counts.available_assets }}</span><span>Assets available</span></a>
+  <a class="tile" href="/access-requests"><span class="num">{{ counts.access_requests }}</span><span>Access requests</span></a>
+</div>
+<h2>Quick actions</h2>
+<ul class="actions">
+  <li><a class="button" href="/bills/new">New Bill</a></li>
+  <li><a class="button" href="/exceptions/new">New Exception</a></li>
+  <li><a class="button" href="/employees/new">New Employee</a></li>
+  <li><a class="button" href="/access-requests/new">New Access Request</a></li>
+</ul>
+{% endblock %}

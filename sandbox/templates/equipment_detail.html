@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "_forms.html" import input, select %}
+{% block title %}{{ asset.asset_tag }}{% endblock %}
+{% block content %}
+<p class="crumbs"><a href="/equipment">Equipment</a> / {{ asset.asset_tag }}</p>
+<h1>{{ asset.asset_tag }} · {{ asset.model }}</h1>
+<dl class="details">
+  <dt>Asset Tag</dt><dd>{{ asset.asset_tag }}</dd>
+  <dt>Model</dt><dd>{{ asset.model }}</dd>
+  <dt>Value</dt><dd>{{ asset.asset_value|money }}</dd>
+  <dt>Status</dt><dd><span class="badge {{ asset.status|lower|replace(' ', '-') }}">{{ asset.status }}</span></dd>
+  <dt>Assigned To</dt><dd>{% if asset.assigned_to %}<a href="/employees/{{ asset.assigned_employee_id }}">{{ asset.assigned_to }}</a>{% else %}—{% endif %}</dd>
+</dl>
+{% if asset.status == "Available" %}
+<h2>Assign</h2>
+<form class="card form" method="post" action="/equipment/{{ asset.asset_tag }}">
+  {{ select("employee_id", "Employee", employees, values.get("employee_id", ""), "— Select employee —", "id", "full_name") }}
+  {{ input("asset_value", "Asset Value", asset.asset_value|money, readonly=true) }}
+  <div class="form-actions">
+    <button type="submit" class="primary">{{ label("assign_equipment") }}</button>
+  </div>
+</form>
+{% else %}
+<p class="muted">This asset is not available for assignment.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% from "_forms.html" import input, select, textarea %}
+{% block title %}New Exception{% endblock %}
+{% block content %}
+<p class="crumbs"><a href="/exceptions">Exceptions</a> / New</p>
+<h1>Log AP Exception</h1>
+<form class="card form" method="post" action="/exceptions/new">
+  {{ select("vendor_id", "Vendor", vendors, values.get("vendor_id", ""), "— Select vendor —", "id", "name") }}
+  {{ input("invoice_number", "Invoice Number", values.get("invoice_number", "")) }}
+  {{ input("po_number", "PO Number", values.get("po_number", ""), hint="Optional") }}
+  {{ textarea("reason", "Reason", values.get("reason", "")) }}
+  <div class="form-actions">
+    <button type="submit" class="primary">{{ label("log_exception") }}</button>
+    <a href="/exceptions">Cancel</a>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}AP Exceptions{% endblock %}
+{% block content %}
+<div class="heading-row">
+  <h1>AP Exceptions</h1>
+  <a class="button primary" href="/exceptions/new">New Exception</a>
+</div>
+<p class="muted">Invoices that could not be entered as bills and need review by the AP team.</p>
+<table>
+  <thead>
+    <tr><th scope="col">Exception</th><th scope="col">Vendor</th><th scope="col">Invoice Number</th>
+        <th scope="col">PO Number</th><th scope="col">Reason</th><th scope="col">Logged</th></tr>
+  </thead>
+  <tbody>
+    {% for e in rows %}
+    <tr>
+      <td>{{ e.exception_number }}</td>
+      <td>{{ e.vendor }}</td>
+      <td>{{ e.invoice_number }}</td>
+      <td>{{ e.po_number or "—" }}</td>
+      <td>{{ e.reason }}</td>
+      <td>{{ e.created_at }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">No exceptions.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

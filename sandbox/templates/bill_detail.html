@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ bill.bill_number }}{% endblock %}
+{% block content %}
+<p class="crumbs"><a href="/bills">Bills</a> / {{ bill.bill_number }}</p>
+<h1>Bill {{ bill.bill_number }}</h1>
+<dl class="details">
+  <dt>Bill Number</dt><dd>{{ bill.bill_number }}</dd>
+  <dt>Vendor</dt><dd>{{ bill.vendor }}</dd>
+  <dt>Invoice Number</dt><dd>{{ bill.invoice_number }}</dd>
+  <dt>Invoice Date</dt><dd>{{ bill.invoice_date }}</dd>
+  <dt>PO Number</dt><dd><a href="/purchase-orders/{{ bill.po_number }}">{{ bill.po_number }}</a></dd>
+  <dt>Amount</dt><dd>{{ bill.amount|money }}</dd>
+  <dt>GL Code</dt><dd>{{ bill.gl_code }}</dd>
+  <dt>Status</dt><dd><span class="badge">{{ bill.status }}</span></dd>
+  <dt>Entered</dt><dd>{{ bill.created_at }}</dd>
+</dl>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Equipment{% endblock %}
+{% block content %}
+<h1>Equipment</h1>
+<table>
+  <thead>
+    <tr><th scope="col">Asset Tag</th><th scope="col">Model</th><th scope="col" class="num">Value</th>
+        <th scope="col">Status</th><th scope="col">Assigned To</th></tr>
+  </thead>
+  <tbody>
+    {% for a in rows %}
+    <tr>
+      <td><a href="/equipment/{{ a.asset_tag }}">{{ a.asset_tag }}</a></td>
+      <td>{{ a.model }}</td>
+      <td class="num">{{ a.asset_value|money }}</td>
+      <td><span class="badge {{ a.status|lower|replace(' ', '-') }}">{{ a.status }}</span></td>
+      <td>{{ a.assigned_to or "—" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

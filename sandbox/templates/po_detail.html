@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ po.po_number }}{% endblock %}
+{% block content %}
+<p class="crumbs"><a href="/purchase-orders">Purchase Orders</a> / {{ po.po_number }}</p>
+<h1>Purchase Order {{ po.po_number }}</h1>
+<dl class="details">
+  <dt>PO Number</dt><dd>{{ po.po_number }}</dd>
+  <dt>Vendor</dt><dd>{{ po.vendor }}</dd>
+  <dt>Description</dt><dd>{{ po.description }}</dd>
+  <dt>Total</dt><dd>{{ po.total_amount|money }}</dd>
+  <dt>Status</dt><dd><span class="badge {{ po.status|lower }}">{{ po.status }}</span></dd>
+  <dt>Created</dt><dd>{{ po.created_date }}</dd>
+</dl>
+{% endblock %}

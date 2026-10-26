@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ emp.full_name }}{% endblock %}
+{% block content %}
+<p class="crumbs"><a href="/employees">Employees</a> / {{ emp.employee_id }}</p>
+<h1>{{ emp.full_name }}</h1>
+<dl class="details">
+  <dt>Employee ID</dt><dd>{{ emp.employee_id }}</dd>
+  <dt>Email</dt><dd>{{ emp.email }}</dd>
+  <dt>Department</dt><dd>{{ emp.department }}</dd>
+  <dt>Title</dt><dd>{{ emp.title }}</dd>
+  <dt>Manager</dt><dd>{{ emp.manager_name or "—" }}</dd>
+  <dt>Start Date</dt><dd>{{ emp.start_date }}</dd>
+</dl>
+<h2>Assigned equipment</h2>
+<table>
+  <thead><tr><th scope="col">Asset Tag</th><th scope="col">Model</th><th scope="col" class="num">Value</th></tr></thead>
+  <tbody>
+    {% for a in assets %}
+    <tr><td><a href="/equipment/{{ a.asset_tag }}">{{ a.asset_tag }}</a></td><td>{{ a.model }}</td><td class="num">{{ a.asset_value|money }}</td></tr>
+    {% else %}
+    <tr><td colspan="3">No equipment assigned.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<h2>Access requests</h2>
+<table>
+  <thead><tr><th scope="col">Request</th><th scope="col">System</th><th scope="col">Access Level</th><th scope="col">Status</th></tr></thead>
+  <tbody>
+    {% for r in access %}
+    <tr><td>{{ r.request_number }}</td><td>{{ r.system_name }}</td><td>{{ r.access_level }}</td><td>{{ r.status }}</td></tr>
+    {% else %}
+    <tr><td colspan="4">No access requests.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

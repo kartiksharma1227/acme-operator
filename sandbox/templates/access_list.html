@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Access Requests{% endblock %}
+{% block content %}
+<div class="heading-row">
+  <h1>Access Requests</h1>
+  <a class="button primary" href="/access-requests/new">New Access Request</a>
+</div>
+<table>
+  <thead>
+    <tr><th scope="col">Request</th><th scope="col">Employee</th><th scope="col">System</th>
+        <th scope="col">Access Level</th><th scope="col">Status</th><th scope="col">Submitted</th></tr>
+  </thead>
+  <tbody>
+    {% for r in rows %}
+    <tr>
+      <td>{{ r.request_number }}</td>
+      <td>{{ r.employee }}</td>
+      <td>{{ r.system_name }}</td>
+      <td>{{ r.access_level }}</td>
+      <td><span class="badge">{{ r.status }}</span></td>
+      <td>{{ r.created_at }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">No access requests.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

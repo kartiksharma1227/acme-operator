@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Vendors{% endblock %}
+{% block content %}
+<h1>Vendors</h1>
+<table>
+  <thead><tr><th scope="col">Vendor</th><th scope="col">Category</th><th scope="col">GL Code</th></tr></thead>
+  <tbody>
+    {% for v in rows %}
+    <tr><td>{{ v.name }}</td><td>{{ v.category }}</td><td>{{ v.gl_code }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

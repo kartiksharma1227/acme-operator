@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_forms.html" import input, select %}
+{% block title %}New Employee{% endblock %}
+{% block content %}
+<p class="crumbs"><a href="/employees">Employees</a> / New</p>
+<h1>New Employee</h1>
+<form class="card form" method="post" action="/employees/new">
+  {{ input("full_name", "Full Name", values.get("full_name", "")) }}
+  {{ input("email", "Email", values.get("email", ""), type="email") }}
+  {{ select("department", "Department", departments, values.get("department", ""), "— Select department —") }}
+  {{ input("title", "Title", values.get("title", "")) }}
+  {{ select("manager_name", "Manager", managers, values.get("manager_name", ""), "— Select manager —", "full_name", "full_name") }}
+  {{ input("start_date", "Start Date", values.get("start_date", ""), type="date") }}
+  <div class="form-actions">
+    <button type="submit" class="primary">{{ label("create_employee") }}</button>
+    <a href="/employees">Cancel</a>
+  </div>
+</form>
+{% endblock %}

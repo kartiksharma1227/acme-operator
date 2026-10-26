@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Employees{% endblock %}
+{% block content %}
+<div class="heading-row">
+  <h1>Employees</h1>
+  <a class="button primary" href="/employees/new">New Employee</a>
+</div>
+<table>
+  <thead>
+    <tr><th scope="col">Employee ID</th><th scope="col">Name</th><th scope="col">Email</th>
+        <th scope="col">Department</th><th scope="col">Title</th><th scope="col">Manager</th>
+        <th scope="col">Start Date</th></tr>
+  </thead>
+  <tbody>
+    {% for e in rows %}
+    <tr>
+      <td><a href="/employees/{{ e.employee_id }}">{{ e.employee_id }}</a></td>
+      <td>{{ e.full_name }}</td>
+      <td>{{ e.email }}</td>
+      <td>{{ e.department }}</td>
+      <td>{{ e.title }}</td>
+      <td>{{ e.manager_name or "—" }}</td>
+      <td>{{ e.start_date }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "_forms.html" import search %}
+{% block title %}Bills{% endblock %}
+{% block content %}
+<div class="heading-row">
+  <h1>Bills</h1>
+  <a class="button primary" href="/bills/new">New Bill</a>
+</div>
+{{ search("/bills", q, "Invoice number, bill number or vendor") }}
+<table>
+  <thead>
+    <tr><th scope="col">Bill Number</th><th scope="col">Vendor</th><th scope="col">Invoice Number</th>
+        <th scope="col">PO Number</th><th scope="col">Invoice Date</th><th scope="col" class="num">Amount</th>
+        <th scope="col">GL Code</th><th scope="col">Status</th></tr>
+  </thead>
+  <tbody>
+    {% for b in rows %}
+    <tr>
+      <td><a href="/bills/{{ b.bill_number }}">{{ b.bill_number }}</a></td>
+      <td>{{ b.vendor }}</td>
+      <td>{{ b.invoice_number }}</td>
+      <td>{{ b.po_number }}</td>
+      <td>{{ b.invoice_date }}</td>
+      <td class="num">{{ b.amount|money }}</td>
+      <td>{{ b.gl_code }}</td>
+      <td><span class="badge">{{ b.status }}</span></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="8">No bills match "{{ q }}".</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

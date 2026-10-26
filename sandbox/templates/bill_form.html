@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_forms.html" import input, select %}
+{% block title %}New Bill{% endblock %}
+{% block content %}
+<p class="crumbs"><a href="/bills">Bills</a> / New</p>
+<h1>New Bill</h1>
+<form class="card form" method="post" action="/bills/new">
+  {{ select("vendor_id", "Vendor", vendors, values.get("vendor_id", ""), "— Select vendor —", "id", "name") }}
+  {{ input("po_number", "PO Number", values.get("po_number", "")) }}
+  {{ input("invoice_number", "Invoice Number", values.get("invoice_number", "")) }}
+  {{ input("invoice_date", "Invoice Date", values.get("invoice_date", ""), type="date") }}
+  {{ input("amount", "Amount", values.get("amount", ""), hint="In USD, e.g. 1203.50") }}
+  {{ input("gl_code", "GL Code", values.get("gl_code", ""), hint="See the Vendors page for each vendor's GL code") }}
+  <div class="form-actions">
+    <button type="submit" class="primary">{{ label("create_bill") }}</button>
+    <a href="/bills">Cancel</a>
+  </div>
+</form>
+{% endblock %}

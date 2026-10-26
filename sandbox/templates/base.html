@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Acme ERP{% endblock %} · Acme ERP</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">Acme Corp <span>ERP</span></a>
+    {% if user %}
+    <div class="userbox">Signed in as <strong>{{ user }}</strong> · <a href="/logout">Sign out</a></div>
+    {% endif %}
+  </header>
+  <div class="layout">
+    {% if user %}
+    <nav class="sidebar" aria-label="Main">
+      <ul>
+        <li><a href="/">Dashboard</a></li>
+        <li class="group">Finance</li>
+        <li><a href="/purchase-orders">Purchase Orders</a></li>
+        <li><a href="/bills">Bills</a></li>
+        <li><a href="/exceptions">Exceptions</a></li>
+        <li><a href="/vendors">Vendors</a></li>
+        <li class="group">People &amp; IT</li>
+        <li><a href="/employees">Employees</a></li>
+        <li><a href="/equipment">Equipment</a></li>
+        <li><a href="/access-requests">Access Requests</a></li>
+      </ul>
+    </nav>
+    {% endif %}
+    <main>
+      {% if flash %}<div class="flash ok" role="status">{{ flash }}</div>{% endif %}
+      {% if errors %}
+      <div class="flash error" role="alert">
+        {% for e in errors %}<p>{{ e }}</p>{% endfor %}
+      </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "_forms.html" import search %}
+{% block title %}Purchase Orders{% endblock %}
+{% block content %}
+<h1>Purchase Orders</h1>
+{{ search("/purchase-orders", q, "PO number or vendor") }}
+<table>
+  <thead>
+    <tr><th scope="col">PO Number</th><th scope="col">Vendor</th><th scope="col">Description</th>
+        <th scope="col" class="num">Total</th><th scope="col">Status</th><th scope="col">Created</th></tr>
+  </thead>
+  <tbody>
+    {% for po in rows %}
+    <tr>
+      <td><a href="/purchase-orders/{{ po.po_number }}">{{ po.po_number }}</a></td>
+      <td>{{ po.vendor }}</td>
+      <td>{{ po.description }}</td>
+      <td class="num">{{ po.total_amount|money }}</td>
+      <td><span class="badge {{ po.status|lower }}">{{ po.status }}</span></td>
+      <td>{{ po.created_date }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">No purchase orders match "{{ q }}".</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<nav class="pager" aria-label="Pagination">
+  {% if page > 1 %}<a href="/purchase-orders?q={{ q|urlencode }}&page={{ page - 1 }}">Previous</a>{% endif %}
+  <span>Page {{ page }} of {{ pages }} · {{ total }} purchase orders</span>
+  {% if page < pages %}<a href="/purchase-orders?q={{ q|urlencode }}&page={{ page + 1 }}">Next</a>{% endif %}
+</nav>
+{% endblock %}

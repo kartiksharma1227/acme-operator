@@ -1,0 +1,38 @@
+{# Form building blocks. Every control gets a real <label for>, so it has an accessible name. #}
+
+{% macro input(id, text, value="", type="text", readonly=false, hint="") -%}
+<div class="field">
+  <label for="{{ id }}">{{ text }}</label>
+  <input id="{{ id }}" name="{{ id }}" type="{{ type }}" value="{{ value }}"{% if readonly %} readonly{% endif %}>
+  {% if hint %}<small class="hint">{{ hint }}</small>{% endif %}
+</div>
+{%- endmacro %}
+
+{% macro textarea(id, text, value="") -%}
+<div class="field">
+  <label for="{{ id }}">{{ text }}</label>
+  <textarea id="{{ id }}" name="{{ id }}" rows="3">{{ value }}</textarea>
+</div>
+{%- endmacro %}
+
+{% macro select(id, text, items, selected="", placeholder="", value_key=none, text_key=none) -%}
+<div class="field">
+  <label for="{{ id }}">{{ text }}</label>
+  <select id="{{ id }}" name="{{ id }}">
+    {% if placeholder %}<option value="">{{ placeholder }}</option>{% endif %}
+    {% for item in items %}
+      {% set v = item[value_key] if value_key else item %}
+      {% set t = item[text_key] if text_key else item %}
+      <option value="{{ v }}"{% if v|string == selected|string %} selected{% endif %}>{{ t }}</option>
+    {% endfor %}
+  </select>
+</div>
+{%- endmacro %}
+
+{% macro search(action, q, placeholder) -%}
+<form class="search" method="get" action="{{ action }}" role="search">
+  <label for="q">Search</label>
+  <input id="q" name="q" type="search" value="{{ q }}" placeholder="{{ placeholder }}">
+  <button type="submit">Search</button>
+</form>
+{%- endmacro %}

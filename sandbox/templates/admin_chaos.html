@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Chaos settings{% endblock %}
+{% block content %}
+<h1>Chaos settings</h1>
+<p>Demo-only page that shows which failure modes are currently injected.</p>
+<table>
+  <thead><tr><th scope="col">Mode</th><th scope="col">Enabled</th><th scope="col">Effect</th></tr></thead>
+  <tbody>
+    <tr><td>rename</td><td>{{ "yes" if chaos.enabled("rename") else "no" }}</td><td>Submit buttons use alternate labels</td></tr>
+    <tr><td>expiry</td><td>{{ "yes" if chaos.enabled("expiry") else "no" }}</td><td>Session expires after {{ chaos.expiry_n }} requests</td></tr>
+    <tr><td>flaky</td><td>{{ "yes" if chaos.enabled("flaky") else "no" }}</td><td>{{ (chaos.flaky_rate * 100)|round|int }}% of GET requests return 500</td></tr>
+    <tr><td>slow</td><td>{{ "yes" if chaos.enabled("slow") else "no" }}</td><td>Responses delayed 0.5–3 s</td></tr>
+  </tbody>
+</table>
+<p>Seed: {{ chaos.seed }}</p>
+<h2>Button labels</h2>
+<table>
+  <thead><tr><th scope="col">Normal</th><th scope="col">Under rename</th></tr></thead>
+  <tbody>
+    {% for normal, renamed in renames.values() %}<tr><td>{{ normal }}</td><td>{{ renamed }}</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

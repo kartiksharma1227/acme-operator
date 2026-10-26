@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "_forms.html" import select %}
+{% block title %}New Access Request{% endblock %}
+{% block content %}
+<p class="crumbs"><a href="/access-requests">Access Requests</a> / New</p>
+<h1>New Access Request</h1>
+<form class="card form" method="post" action="/access-requests/new">
+  {{ select("employee_id", "Employee", employees, values.get("employee_id", ""), "— Select employee —", "id", "full_name") }}
+  {{ select("system_name", "System", systems, values.get("system_name", ""), "— Select system —") }}
+  {{ select("access_level", "Access Level", levels, values.get("access_level", ""), "— Select level —") }}
+  <div class="form-actions">
+    <button type="submit" class="primary">{{ label("submit_request") }}</button>
+    <a href="/access-requests">Cancel</a>
+  </div>
+</form>
+{% endblock %}
