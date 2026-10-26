@@ -13,10 +13,7 @@ The same runtime onboarded a new employee with **zero code changes**: only the h
 > A narrow system that genuinely demonstrates autonomy. Every claim below is backed by a test, an eval
 > scenario graded from the database, or a run log.
 
-- **Demo video:** _link to be added_
-- **Evals:** [`evals/results.md`](evals/results.md)
-- **How to run it, step by step:** [`run.md`](run.md)
-- **Build spec:** [`prompt.md`](prompt.md)
+
 
 A real run, with chaos mode on (buttons renamed, sessions expiring, random 500s):
 ```
